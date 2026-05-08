@@ -20,12 +20,14 @@ public class AuthorizationController {
 
     private final AuthorizationService authorizationService;
 
+    //register employee POST mapping
     @PostMapping("/register")
     public ResponseEntity<ApiResponseDTO<EmployeeRegistrationResponseDTO>> register(@Valid @RequestBody EmployeeRegistrationRequestDTO request) {
         EmployeeRegistrationResponseDTO response = authorizationService.registerEmployee(request);
         return ResponseEntity.ok(ApiResponseDTO.success("Employee registered successfully", response));
     }
 
+    //login employee POST mapping
     @PostMapping("/login")
     public ResponseEntity<ApiResponseDTO<EmployeeRegistrationResponseDTO>> login(@Valid @RequestBody LoginRequestDTO request) {
         EmployeeRegistrationResponseDTO response = authorizationService.login(request);
