@@ -4,7 +4,7 @@ import com.organization.taskManagement.DTO.Request.EmployeeRegistrationRequestDT
 import com.organization.taskManagement.DTO.Request.LoginRequestDTO;
 import com.organization.taskManagement.DTO.Response.ApiResponseDTO;
 import com.organization.taskManagement.DTO.Response.EmployeeRegistrationResponseDTO;
-import com.organization.taskManagement.Services.EmployeeRegisterService;
+import com.organization.taskManagement.Services.AuthorizationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,26 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthorizationController {
 
-    private EmployeeRegisterService employeeRegService;
+    private final AuthorizationService authorizationService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponseDTO<EmployeeRegistrationResponseDTO>> register(@Valid @RequestBody EmployeeRegistrationRequestDTO request) {
-        try {
-            EmployeeRegistrationResponseDTO response = employeeRegService.registerEmployee(request);
-            return ResponseEntity.ok(ApiResponseDTO.success("Employee registered successfully", response));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(ApiResponseDTO.failure(e.getMessage()));
-        }
+        EmployeeRegistrationResponseDTO response = authorizationService.registerEmployee(request);
+        return ResponseEntity.ok(ApiResponseDTO.success("Employee registered successfully", response));
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponseDTO<EmployeeRegistrationResponseDTO>> login(@Valid @RequestBody LoginRequestDTO request) {
-        try {
-            EmployeeRegistrationResponseDTO response = employeeRegService.login(request);
-            return ResponseEntity.ok(ApiResponseDTO.success("Login successful", response));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(ApiResponseDTO.failure(e.getMessage()));
-        }
+        EmployeeRegistrationResponseDTO response = authorizationService.login(request);
+        return ResponseEntity.ok(ApiResponseDTO.success("Login successful", response));
     }
 
 }

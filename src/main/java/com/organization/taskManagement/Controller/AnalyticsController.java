@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/analytics")
+@RequestMapping("analytics")
 @RequiredArgsConstructor
 public class AnalyticsController {
 
@@ -18,12 +18,8 @@ public class AnalyticsController {
 
     @GetMapping("/overview")
     public ResponseEntity<ApiResponseDTO<AnalyticsResponseDTO>> getAnalyticsOverview() {
-        try {
-            AnalyticsResponseDTO analyticsData = analyticsService.getAnalyticsOverview();
-            return ResponseEntity.ok(ApiResponseDTO.success("", analyticsData));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(ApiResponseDTO.failure(e.getMessage()));
-        }
+            AnalyticsResponseDTO analyticsResponse = analyticsService.getAnalyticsOverview();
+            return ResponseEntity.ok(ApiResponseDTO.success("Analytics overview retrieved successfully", analyticsResponse));
     }
 }
 

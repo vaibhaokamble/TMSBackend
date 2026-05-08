@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class EmployeeRegisterController {
 
-    private final EmployeeRegisterService employeeRegService;
-
+    private final EmployeeRegisterService employeeRegisterService;
 
     @GetMapping
     public ResponseEntity<Page<EmployeeRegistrationResponseDTO>> getAllEmployees(
@@ -31,12 +30,12 @@ public class EmployeeRegisterController {
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC , sortBy);
 
-        return ResponseEntity.ok(employeeRegService.getAllEmployees(pageable));
+        return ResponseEntity.ok(employeeRegisterService.getAllEmployees(pageable));
     }
 
     @DeleteMapping("/{id}")
    public ResponseEntity<ApiResponseDTO<?>> deleteEmployee(@PathVariable Long id){
-        employeeRegService.deleteEmployee(id);
+        employeeRegisterService.deleteEmployee(id);
         return ResponseEntity.ok(ApiResponseDTO.success("Employee deleted successfully", null));
    }
 
