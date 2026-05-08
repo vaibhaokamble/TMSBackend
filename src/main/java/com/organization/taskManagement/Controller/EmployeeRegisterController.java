@@ -22,25 +22,6 @@ public class EmployeeRegisterController {
 
     private final EmployeeRegisterService employeeRegService;
 
-    @PostMapping("/register")
-    public ResponseEntity<ApiResponseDTO<EmployeeRegistrationResponseDTO>> register(@Valid @RequestBody EmployeeRegistrationRequestDTO request) {
-        try {
-            EmployeeRegistrationResponseDTO response = employeeRegService.registerEmployee(request);
-            return ResponseEntity.ok(ApiResponseDTO.success("Employee registered successfully", response));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(ApiResponseDTO.failure(e.getMessage()));
-        }
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponseDTO<EmployeeRegistrationResponseDTO>> login(@Valid @RequestBody LoginRequestDTO request) {
-        try {
-            EmployeeRegistrationResponseDTO response = employeeRegService.login(request);
-            return ResponseEntity.ok(ApiResponseDTO.success("Login successful", response));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(ApiResponseDTO.failure(e.getMessage()));
-        }
-    }
 
     @GetMapping
     public ResponseEntity<Page<EmployeeRegistrationResponseDTO>> getAllEmployees(
