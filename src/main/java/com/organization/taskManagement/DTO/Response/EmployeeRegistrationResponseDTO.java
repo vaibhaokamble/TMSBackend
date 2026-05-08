@@ -22,6 +22,4 @@ public class EmployeeRegistrationResponseDTO {
     private Designation designation;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-
 }

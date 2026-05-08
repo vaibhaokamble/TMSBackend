@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<TaskModel, Long> {
     
-    @Query("SELECT COUNT(t) FROM Task t WHERE t.status = ?1")
+    @Query("SELECT COUNT(t) FROM TaskModel t WHERE t.status = ?1")
     Long countByStatus(TaskStatus status);
     
-    @Query("SELECT t FROM Task t WHERE t.assignedTo IS NOT NULL")
+    @Query("SELECT t FROM TaskModel t WHERE t.assignedTo IS NOT NULL")
     List<TaskModel> findAllAssignedTasks();
 }

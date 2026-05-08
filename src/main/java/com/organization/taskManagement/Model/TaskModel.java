@@ -16,7 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "tasks")
 @Setter
 @Getter
 public class TaskModel {
@@ -39,10 +38,12 @@ public class TaskModel {
 
     private Instant createdAt;
     private Instant updatedAt;
+    @Builder.Default
     @JsonManagedReference
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentModel> comments= new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ActivityLogModel> activityLog = new ArrayList<>();
 

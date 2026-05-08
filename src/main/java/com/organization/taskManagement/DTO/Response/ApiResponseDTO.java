@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,8 +19,12 @@ public class ApiResponseDTO<T> {
         return new ApiResponseDTO<>(true, message, data);
     }
 
-    public static <T> ApiResponseDTO<T> failure(String message)
-    {
+    public static <T> ApiResponseDTO<T> failure(String message) {
         return new ApiResponseDTO<>(false, message, null);
+    }
+
+    public static <T> ApiResponseDTO<T> failure(String message, T errors)
+    {
+        return new ApiResponseDTO<>(false, message, errors);
     }
 }
