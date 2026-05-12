@@ -16,6 +16,7 @@ public class AnalyticsController {
 
     private final AnalyticsService analyticsService;
 
+    //TODO get mapping analytics overview
     @GetMapping("/overview")
     public ResponseEntity<ApiResponseDTO<AnalyticsResponseDTO>> getAnalyticsOverview() {
             AnalyticsResponseDTO analyticsResponse = analyticsService.getAnalyticsOverview();

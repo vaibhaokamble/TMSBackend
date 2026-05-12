@@ -21,7 +21,7 @@ public class EmployeeRegisterController {
     private final EmployeeRegisterService employeeRegisterService;
 
 
-    //get mapping by pagination
+    //TODO get mapping by pagination and sorting
     @GetMapping("/employees")
     public ResponseEntity<Page<EmployeeRegistrationResponseDTO>> getAllEmployees(@Valid
             @RequestParam(defaultValue = "0") int page,
@@ -33,14 +33,14 @@ public class EmployeeRegisterController {
         return ResponseEntity.ok(employeeRegisterService.getAllEmployees(pageable));
     }
 
-    //patch mapping by name, email, designation, role
+    //TODO patch mapping by name, email, designation, role
     @PatchMapping("update/{employeeId}")
     public ResponseEntity<ApiResponseDTO<EmployeeRegistrationResponseDTO>> updateEmployee(@Valid @PathVariable String employeeId, @RequestBody EmployeeUpdateRequestDTO employeeUpdateRequestDTO) {
         EmployeeRegistrationResponseDTO updatedEmployee = employeeRegisterService.updateEmployee(employeeId, employeeUpdateRequestDTO);
         return ResponseEntity.ok(ApiResponseDTO.success("Employee updated successfully", updatedEmployee));
     }
 
-    //delete mapping by id
+    //TODO delete mapping by id
     @DeleteMapping("/{id}")
    public ResponseEntity<ApiResponseDTO<?>> deleteEmployee(@Valid @PathVariable Long id){
         employeeRegisterService.deleteEmployee(id);
