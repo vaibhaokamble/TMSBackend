@@ -28,11 +28,22 @@ public class CommentModel {
     @ManyToOne
     @JoinColumn(name = "task_id")
     private TaskModel task;
+
     private String message;
+    private String name;
     private Instant createdAt;
 
     @PrePersist
     protected void onCreate() {
         createdAt = Instant.now();
     }
+
+
+    public void getEmployeeId(String assignedToId) {
+    }
+
+    public void setAssignedToId(String assignedToId) {
+    }
+
+
 }
