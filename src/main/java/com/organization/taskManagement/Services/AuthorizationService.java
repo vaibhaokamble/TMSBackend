@@ -17,6 +17,7 @@ public class AuthorizationService {
 
     private final EmployeeRegisterRepository employeeRegisterRepository;
     private final PasswordEncoder passwordEncoder;
+
     public EmployeeRegistrationResponseDTO registerEmployee(@Valid EmployeeRegistrationRequestDTO request) {
         if(employeeRegisterRepository.existsByEmployeeId(request.getEmployeeId())) {
             throw new RuntimeException("Employee ID already exists");
