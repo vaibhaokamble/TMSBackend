@@ -68,7 +68,7 @@ taskManagement/
 ### 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/your-username/taskManagement.git
+git clone https://github.com/vaibhaokamble/TMSBackend.git
 ```
 
 ### 2️⃣ Navigate to Project
