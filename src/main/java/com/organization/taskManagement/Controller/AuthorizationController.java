@@ -4,6 +4,7 @@ import com.organization.taskManagement.DTO.Request.EmployeeRegistrationRequestDT
 import com.organization.taskManagement.DTO.Request.LoginRequestDTO;
 import com.organization.taskManagement.DTO.Response.ApiResponseDTO;
 import com.organization.taskManagement.DTO.Response.EmployeeRegistrationResponseDTO;
+import com.organization.taskManagement.DTO.Response.LoginResponseDTO;
 import com.organization.taskManagement.Services.AuthorizationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,8 @@ public class AuthorizationController {
 
     //TODO login employee post mapping
     @PostMapping("/login")
-    public ResponseEntity<ApiResponseDTO<EmployeeRegistrationResponseDTO>> login(@Valid @RequestBody LoginRequestDTO request) {
-        EmployeeRegistrationResponseDTO response = authorizationService.login(request);
+    public ResponseEntity<ApiResponseDTO<LoginResponseDTO>> login(@Valid @RequestBody LoginRequestDTO request) {
+        LoginResponseDTO response = authorizationService.login(request);
         return ResponseEntity.ok(ApiResponseDTO.success("Login successful", response));
     }
 
