@@ -15,6 +15,8 @@ public class AnalyticsResponseDTO {
     private Long totalTasks;
     private Long completedTasks;
     private Long pendingTasks;
+    private Long newTasks;
+    private Long assignedTasks;
     private Map<String, Long> teamDistribution;
 }
 

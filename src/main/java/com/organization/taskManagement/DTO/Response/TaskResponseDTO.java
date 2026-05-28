@@ -2,6 +2,8 @@ package com.organization.taskManagement.DTO.Response;
 import com.organization.taskManagement.Enums.TaskStatus;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Data
 @Setter
 @Getter
@@ -15,5 +17,7 @@ public class TaskResponseDTO {
     private TaskStatus status;
     private java.time.LocalDate dueDate;
     private String assignedToId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
 

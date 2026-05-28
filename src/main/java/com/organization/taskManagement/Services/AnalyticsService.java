@@ -36,6 +36,8 @@ public class AnalyticsService {
                 .totalTasks(totalTasks)
                 .completedTasks(completedTasks)
                 .pendingTasks(pendingTasks)
+                .newTasks(newTasks)
+                .assignedTasks(assignedTasks)
                 .teamDistribution(teamDistribution)
                 .build();
     }

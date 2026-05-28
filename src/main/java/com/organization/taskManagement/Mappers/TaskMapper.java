@@ -6,6 +6,9 @@ import com.organization.taskManagement.Enums.TaskStatus;
 import com.organization.taskManagement.Model.EmployeeRegisterModel;
 import com.organization.taskManagement.Model.TaskModel;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+
 public class TaskMapper {
 
     public static TaskModel toEntity(TaskRequestDTO request, EmployeeRegisterModel employee) {
@@ -23,6 +26,7 @@ public class TaskMapper {
                 .dueDate(request.getDueDate())
                 .assignedTo(employee)
                 .status(status)
+                .updatedAt(Instant.now())
                 .build();
     }
 
