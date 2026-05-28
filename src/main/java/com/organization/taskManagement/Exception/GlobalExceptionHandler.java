@@ -177,6 +177,17 @@ public class GlobalExceptionHandler {
                 .body(ApiResponseDTO.failure(ex.getMessage(), null));
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponseDTO<Void>> handleResourceNotFound(
+            ResourceNotFoundException ex) {
+
+        log.warn("Resource not found: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponseDTO.failure(ex.getMessage(), null));
+    }
+
     // 9. Handles generic runtime exceptions (catch-all)
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponseDTO<Void>> handleRuntimeException(

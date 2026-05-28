@@ -12,6 +12,8 @@ import com.organization.taskManagement.Repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import com.organization.taskManagement.Exception.ResourceNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -23,10 +25,10 @@ public class CommentService {
     //comment service
     public CommentResponseDTO addComment(Long taskId, CommentRequestDTO requestDTO) {
         TaskModel task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + taskId));
+                .orElseThrow(() -> new ResourceNotFoundException("Task", taskId));
 
         EmployeeRegisterModel employee = employeeRegisterRepository.findByEmployeeId(requestDTO.getEmployeeId())
-                .orElseThrow(() -> new RuntimeException("Employee not found with ID: " + requestDTO.getEmployeeId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee", "employeeId", requestDTO.getEmployeeId()));
 
         CommentModel comment = CommentMapper.toEntity(requestDTO, task, employee);
         CommentModel savedComment = commentRepository.save(comment);

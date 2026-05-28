@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.organization.taskManagement.Exception.ResourceNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 public class EmployeeRegisterService {
@@ -24,7 +26,7 @@ public class EmployeeRegisterService {
     //delete employee by id
     public void deleteEmployee (Long id){
         EmployeeRegisterModel employee = employeeRegRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee", id));
         employeeRegRepo.delete(employee);
     }
 
@@ -37,7 +39,7 @@ public class EmployeeRegisterService {
 
     public EmployeeRegistrationResponseDTO updateEmployee(@Valid @PathVariable String employeeId, @RequestBody EmployeeUpdateRequestDTO employeeRequest) {
         EmployeeRegisterModel employeeRegisterModel = employeeRegRepo.findByEmployeeId(employeeId)
-                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + employeeId));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee", "employeeId", employeeId));
 
         if (employeeRequest.getName() != null) {
             employeeRegisterModel.setName(employeeRequest.getName());

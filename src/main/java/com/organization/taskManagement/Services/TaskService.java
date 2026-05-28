@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.organization.taskManagement.Exception.ResourceNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -25,7 +27,7 @@ public class TaskService {
         EmployeeRegisterModel employee = null;
         if (taskRequest.getAssignedToId() != null && !taskRequest.getAssignedToId().isEmpty()) {
             employee = employeeRegRepo.findByEmployeeId(taskRequest.getAssignedToId())
-                    .orElseThrow(() -> new RuntimeException("Employee not found with ID: " + taskRequest.getAssignedToId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Employee", "employeeId", taskRequest.getAssignedToId()));
         }
 
         TaskModel task = TaskMapper.toEntity(taskRequest, employee);
@@ -36,7 +38,7 @@ public class TaskService {
 
     public TaskResponseDTO getTaskById(Long id) {
         TaskModel task = taskRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Task", id));
         return TaskMapper.toResponse(task);
     }
 
@@ -48,12 +50,12 @@ public class TaskService {
 
     public TaskResponseDTO updateTask(Long id, TaskRequestDTO taskRequest) {
         TaskModel task = taskRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Task", id));
 
         EmployeeRegisterModel employee = null;
         if (taskRequest.getAssignedToId() != null && !taskRequest.getAssignedToId().isEmpty()) {
             employee = employeeRegRepo.findByEmployeeId(taskRequest.getAssignedToId())
-                    .orElseThrow(() -> new RuntimeException("Employee not found with ID: " + taskRequest.getAssignedToId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Employee", "employeeId", taskRequest.getAssignedToId()));
         }
 
         TaskMapper.updateEntity(task, taskRequest, employee);
@@ -64,7 +66,7 @@ public class TaskService {
 
     public void deleteTask(Long id) {
         if (!taskRepo.existsById(id)) {
-            throw new RuntimeException("Task not found with ID: " + id);
+            throw new ResourceNotFoundException("Task", id);
         }
         taskRepo.deleteById(id);
     }
