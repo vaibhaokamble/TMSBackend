@@ -82,7 +82,7 @@ cd taskManagement
 Update `application.properties`
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/task_management
+spring.datasource.url=jdbc:mysql://localhost:3306/tsm_db
 spring.datasource.username=root
 spring.datasource.password=your_password
 
