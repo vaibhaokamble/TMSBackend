@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * STEP-BY-STEP INTERNAL WORKINGS:
  * 
  * 1. This service handles all JSON Web Token (JWT) operations: creation, parsing, and validation.
- * 2. It uses the Secret Key defined in application.properties to sign and verify tokens.
+ * 2. It uses the Secret Key defined in application.yaml to sign and verify tokens.
  * 3. JWTs consist of Header, Payload (Claims), and Signature.
  */
 @Service

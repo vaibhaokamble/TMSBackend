@@ -11,7 +11,8 @@ import java.time.LocalDate;
 public class TaskRequestDTO {
     private String title;
     private String description;
-    private String teamId;
+    private Long teamId;
+    private Long projectId;
     private String assignedToId;
     private LocalDate dueDate;
     private TaskStatus status;

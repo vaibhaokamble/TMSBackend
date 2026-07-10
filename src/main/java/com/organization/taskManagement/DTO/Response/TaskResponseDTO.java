@@ -15,5 +15,6 @@ public class TaskResponseDTO {
     private TaskStatus status;
     private java.time.LocalDate dueDate;
     private String assignedToId;
+    private Long assignedTeamId;
+    private Long projectId;
 }
-

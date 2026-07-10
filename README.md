@@ -55,7 +55,7 @@ taskManagement/
 │   │   │   └── Mappers/
 │   │   │
 │   │   └── resources/
-│   │       ├── application.properties
+│   │       ├── application.yaml
 │   │
 │── pom.xml
 │── README.md

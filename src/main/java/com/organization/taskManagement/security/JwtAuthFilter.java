@@ -39,7 +39,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             "/auth/register",
             "/generateToken",
             "/auth/login",
-            "/error/**"
+            "/error/**",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html"
     };
 
     /**

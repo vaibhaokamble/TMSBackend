@@ -38,6 +38,14 @@ public class TaskModel {
 
     private Instant createdAt;
     private Instant updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private ProjectModel project;
+
+    @ManyToOne
+    @JoinColumn(name = "assigned_team_id")
+    private TeamModel assignedTeam;
     @Builder.Default
     @JsonManagedReference
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)

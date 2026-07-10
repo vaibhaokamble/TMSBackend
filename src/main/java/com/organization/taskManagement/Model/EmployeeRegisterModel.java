@@ -46,6 +46,10 @@ public class EmployeeRegisterModel {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    @ManyToMany(mappedBy = "members")
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private java.util.List<TeamModel> teams;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
