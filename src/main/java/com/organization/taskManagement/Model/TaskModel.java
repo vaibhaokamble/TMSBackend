@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import com.organization.taskManagement.Enums.TaskStatus;
+import com.organization.taskManagement.Enums.Priority;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +29,9 @@ public class TaskModel {
 
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
     
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
@@ -42,6 +46,10 @@ public class TaskModel {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private ProjectModel project;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by_id")
+    private EmployeeRegisterModel createdBy;
 
     @ManyToOne
     @JoinColumn(name = "assigned_team_id")

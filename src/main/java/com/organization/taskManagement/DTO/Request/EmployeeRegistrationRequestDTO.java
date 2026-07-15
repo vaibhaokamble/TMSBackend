@@ -24,7 +24,7 @@ public class EmployeeRegistrationRequestDTO {
     private String email;
 
     @NotBlank(message = "Employee ID is required")
-    @Pattern(regexp = "^KDZ[0-9]+$", message = "Employee ID must start with 'KDZ' followed by numbers")
+    @Pattern(regexp = "^VK[0-9]+$", message = "Employee ID must start with 'VK' followed by numbers")
     private String employeeId;
 
     @NotBlank(message = "Password is required")

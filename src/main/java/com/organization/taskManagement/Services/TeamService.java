@@ -21,6 +21,7 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final EmployeeRegisterRepository employeeRepository;
     private final ProjectRepository projectRepository;
+    private final ActivityLogService activityLogService;
 
     @Transactional
     public TeamModel createTeam(TeamRequestDTO request) {
@@ -32,12 +33,14 @@ public class TeamService {
                 .name(request.getName())
                 .members(members)
                 .build();
-        return teamRepository.save(team);
+        TeamModel savedTeam = teamRepository.save(team);
+        activityLogService.logActivity("Team Created", "Team created: " + savedTeam.getName());
+        return savedTeam;
     }
 
     @Transactional
     public TeamModel assignTeamToProject(Long teamId, Long projectId) {
-        TeamModel team = teamRepository.findById(teamId).orElseThrow(() -> new RuntimeException("Team not found"));
+        TeamModel team = getTeamById(teamId);
         ProjectModel project = projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
         
         if (!team.getProjects().contains(project)) {
@@ -48,10 +51,39 @@ public class TeamService {
         }
         
         projectRepository.save(project);
-        return teamRepository.save(team);
+        TeamModel savedTeam = teamRepository.save(team);
+        activityLogService.logActivity("Project Assigned", "Project " + project.getName() + " assigned to team " + savedTeam.getName());
+        return savedTeam;
     }
 
     public List<TeamModel> getAllTeams() {
         return teamRepository.findAll();
+    }
+
+    public TeamModel getTeamById(Long id) {
+        return teamRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Team not found"));
+    }
+
+    @Transactional
+    public TeamModel updateTeam(Long id, TeamRequestDTO request) {
+        TeamModel team = getTeamById(id);
+        if (request.getName() != null) team.setName(request.getName());
+        
+        if (request.getMemberIds() != null) {
+            List<EmployeeRegisterModel> members = employeeRepository.findAllById(request.getMemberIds());
+            team.setMembers(members);
+        }
+        TeamModel updatedTeam = teamRepository.save(team);
+        activityLogService.logActivity("Team Updated", "Team updated: " + updatedTeam.getName());
+        return updatedTeam;
+    }
+
+    @Transactional
+    public void deleteTeam(Long id) {
+        TeamModel team = getTeamById(id);
+        String name = team.getName();
+        teamRepository.delete(team);
+        activityLogService.logActivity("Team Deleted", "Team deleted: " + name);
     }
 }

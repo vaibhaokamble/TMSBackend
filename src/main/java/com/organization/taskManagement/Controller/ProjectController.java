@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 @RestController
 @RequestMapping("/api/projects")
 @RequiredArgsConstructor
@@ -22,7 +24,23 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjectModel>> getAllProjects() {
-        return ResponseEntity.ok(projectService.getAllProjects());
+    public ResponseEntity<List<ProjectModel>> getAllProjects(@org.springframework.security.core.annotation.AuthenticationPrincipal com.organization.taskManagement.security.UserInfoDetails userDetails) {
+        return ResponseEntity.ok(projectService.getAllProjects(userDetails));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectModel> getProjectById(@PathVariable Long id) {
+        return ResponseEntity.ok(projectService.getProjectById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProjectModel> updateProject(@PathVariable Long id, @RequestBody ProjectRequestDTO request) {
+        return ResponseEntity.ok(projectService.updateProject(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
+        projectService.deleteProject(id);
+        return ResponseEntity.ok().build();
     }
 }

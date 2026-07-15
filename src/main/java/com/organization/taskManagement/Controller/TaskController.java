@@ -1,6 +1,5 @@
 package com.organization.taskManagement.Controller;
 
-import com.organization.taskManagement.DTO.Response.ApiResponseDTO;
 import com.organization.taskManagement.DTO.Request.TaskRequestDTO;
 import com.organization.taskManagement.DTO.Response.TaskResponseDTO;
 import com.organization.taskManagement.Services.TaskService;
@@ -10,45 +9,48 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 @RestController
-@RequestMapping
+@RequestMapping("/tasks")
 @RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService taskService;
 
-    //TODO post mapping for create task
-    @PostMapping("/task")
-    public ResponseEntity<ApiResponseDTO<TaskResponseDTO>> createTask(@RequestBody TaskRequestDTO taskRequest) {
-        TaskResponseDTO taskResponse = taskService.createTask(taskRequest);
-        return ResponseEntity.ok(ApiResponseDTO.success("Task created successfully", taskResponse));
+    @PostMapping
+    public ResponseEntity<TaskResponseDTO> createTask(@RequestBody TaskRequestDTO taskRequest, @org.springframework.security.core.annotation.AuthenticationPrincipal com.organization.taskManagement.security.UserInfoDetails userDetails) {
+        return ResponseEntity.ok(taskService.createTask(taskRequest, userDetails));
     }
 
-    //TODO get mapping by task id
-    @GetMapping("/task/{id}")
-    public ResponseEntity<ApiResponseDTO<TaskResponseDTO>> getTaskById(@PathVariable Long id) {
-        TaskResponseDTO taskResponse = taskService.getTaskById(id);
-        return ResponseEntity.ok(ApiResponseDTO.success("Task retrieved successfully", taskResponse));
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> getTaskById(@PathVariable Long id) {
+        return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
-    //TODO get all task mapping
-    @GetMapping("/tasks")
-    public ResponseEntity<ApiResponseDTO<List<TaskResponseDTO>>> getAllTasks() {
-        List<TaskResponseDTO> tasks = taskService.getAllTasks();
-        return ResponseEntity.ok(ApiResponseDTO.success("Tasks retrieved successfully", tasks));
+    @GetMapping
+    public ResponseEntity<List<TaskResponseDTO>> getAllTasks(@org.springframework.security.core.annotation.AuthenticationPrincipal com.organization.taskManagement.security.UserInfoDetails userDetails) {
+        return ResponseEntity.ok(taskService.getAllTasks(userDetails));
     }
 
-    //TODO update task mapping by id
-    @PutMapping("/task/{id}")
-    public ResponseEntity<ApiResponseDTO<TaskResponseDTO>> updateTask(@PathVariable Long id, @RequestBody TaskRequestDTO taskRequest) {
-        TaskResponseDTO taskResponse = taskService.updateTask(id, taskRequest);
-        return ResponseEntity.ok(ApiResponseDTO.success("Task updated successfully", taskResponse));
+    @GetMapping("/project/{projectId}")
+    public ResponseEntity<List<TaskResponseDTO>> getTasksByProjectId(@PathVariable Long projectId) {
+        return ResponseEntity.ok(taskService.getTasksByProjectId(projectId));
     }
 
-    //TODO delete task mapping by id
-    @DeleteMapping("/task/{id}")
-    public ResponseEntity<ApiResponseDTO<String>> deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
-        return ResponseEntity.ok(ApiResponseDTO.success("Task deleted successfully", null));
+    @GetMapping("/assignee/{employeeId}")
+    public ResponseEntity<List<TaskResponseDTO>> getTasksByAssigneeId(@PathVariable String employeeId) {
+        return ResponseEntity.ok(taskService.getTasksByAssigneeId(employeeId));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable Long id, @RequestBody TaskRequestDTO taskRequest, @org.springframework.security.core.annotation.AuthenticationPrincipal com.organization.taskManagement.security.UserInfoDetails userDetails) {
+        return ResponseEntity.ok(taskService.updateTask(id, taskRequest, userDetails));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id, @org.springframework.security.core.annotation.AuthenticationPrincipal com.organization.taskManagement.security.UserInfoDetails userDetails) {
+        taskService.deleteTask(id, userDetails);
+        return ResponseEntity.ok().build();
     }
 }

@@ -14,7 +14,17 @@ import java.util.Map;
 public class AnalyticsResponseDTO {
     private Long totalTasks;
     private Long completedTasks;
-    private Long pendingTasks;
+    private Long newTasks;
+    private Long assignedTasks;
+    private Long inProgressTasks;
+    private Long overdueTasks;
+    private Long todayAssignedTasks;
+    private Long totalEmployees;
+    private Long totalTeams;
+    private Long totalProjects;
+    private java.util.List<com.organization.taskManagement.Model.ProjectModel> recentProjects;
+    private java.util.List<com.organization.taskManagement.DTO.Response.EmployeeRegistrationResponseDTO> recentEmployees;
+    private java.util.List<com.organization.taskManagement.Model.TaskModel> upcomingDeadlines;
     private Map<String, Long> teamDistribution;
 }
 

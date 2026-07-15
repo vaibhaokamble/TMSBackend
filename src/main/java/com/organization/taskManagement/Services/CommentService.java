@@ -12,6 +12,9 @@ import com.organization.taskManagement.Repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -19,8 +22,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final TaskRepository taskRepository;
     private final EmployeeRegisterRepository employeeRegisterRepository;
+    private final ActivityLogService activityLogService;
 
-    //comment service
     public CommentResponseDTO addComment(Long taskId, CommentRequestDTO requestDTO) {
         TaskModel task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found with ID: " + taskId));
@@ -30,6 +33,18 @@ public class CommentService {
 
         CommentModel comment = CommentMapper.toEntity(requestDTO, task, employee);
         CommentModel savedComment = commentRepository.save(comment);
+        
+        activityLogService.logActivity("Comment Added", "Added comment to task: " + task.getTitle(), task);
+        
         return CommentMapper.toResponse(savedComment);
-         }
+    }
+
+    public List<CommentResponseDTO> getCommentsByTaskId(Long taskId) {
+        TaskModel task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + taskId));
+                
+        return task.getComments().stream()
+                .map(CommentMapper::toResponse)
+                .collect(Collectors.toList());
+    }
 }

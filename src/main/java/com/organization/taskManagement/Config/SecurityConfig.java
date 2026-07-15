@@ -42,22 +42,23 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
-                                "/auth/register",
-                                "/auth/register/send-otp",
-                                "/auth/register/verify-otp",
+                                "/api/auth/register",
+                                "/api/auth/register/send-otp",
+                                "/api/auth/register/verify-otp",
+                                "/api/auth/verify-email",
+                                "/api/auth/resend-otp",
+                                "/api/auth/verify-reset-otp",
                                 "/generateToken",
-                                "/auth/login",
-                                "/refreshToken",
-                                "/auth/forget-password",
-                                "/auth/reset-password",
+                                "/api/auth/login",
+                                "/api/auth/refreshToken",
+                                "/api/auth/forgot-password",
+                                "/api/auth/reset-password",
                                 "/v3/api-docs",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/error/**")
                         .permitAll()
-                        .requestMatchers("/user/**").hasAuthority("EMPLOYEE")
-                        .requestMatchers("/admin/**").hasAuthority("TEAM_LEAD")
                         .anyRequest().authenticated())  // /logout will be authenticated by JWT filter
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((req, res, exx) -> {

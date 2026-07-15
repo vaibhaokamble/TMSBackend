@@ -10,13 +10,13 @@ import com.organization.taskManagement.Model.TeamModel;
 
 public class TaskMapper {
 
-    public static TaskModel toEntity(TaskRequestDTO request, EmployeeRegisterModel employee, TeamModel team, ProjectModel project) {
+    public static TaskModel toEntity(TaskRequestDTO request, EmployeeRegisterModel employee, TeamModel team, ProjectModel project, EmployeeRegisterModel createdBy) {
 
         if (request == null) return null;
 
         TaskStatus status = request.getStatus();
-        if (status == null) {
-            status = (employee != null || team != null) ? TaskStatus.ASSIGN : TaskStatus.NEW;
+        if (status == null || status == TaskStatus.NEW || status == TaskStatus.ASSIGNED) {
+            status = (employee != null) ? TaskStatus.ASSIGNED : TaskStatus.NEW;
         }
 
         return TaskModel.builder()
@@ -27,6 +27,8 @@ public class TaskMapper {
                 .assignedTeam(team)
                 .project(project)
                 .status(status)
+                .priority(request.getPriority())
+                .createdBy(createdBy)
                 .build();
     }
 
@@ -43,6 +45,8 @@ public class TaskMapper {
                 .assignedToId(task.getAssignedTo() != null ? task.getAssignedTo().getEmployeeId() : null)
                 .assignedTeamId(task.getAssignedTeam() != null ? task.getAssignedTeam().getId() : null)
                 .projectId(task.getProject() != null ? task.getProject().getId() : null)
+                .priority(task.getPriority())
+                .createdById(task.getCreatedBy() != null ? task.getCreatedBy().getEmployeeId() : null)
                 .build();
     }
 
@@ -51,6 +55,7 @@ public class TaskMapper {
         if (request.getDescription() != null) task.setDescription(request.getDescription());
         if (request.getStatus() != null) task.setStatus(request.getStatus());
         if (request.getDueDate() != null) task.setDueDate(request.getDueDate());
+        if (request.getPriority() != null) task.setPriority(request.getPriority());
         if (employee != null) task.setAssignedTo(employee);
         if (team != null) task.setAssignedTeam(team);
         if (project != null) task.setProject(project);

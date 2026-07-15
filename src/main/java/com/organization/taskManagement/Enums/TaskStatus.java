@@ -2,6 +2,9 @@ package com.organization.taskManagement.Enums;
 
 public enum TaskStatus {
     NEW,
-    ASSIGN,
+    ASSIGNED,
+    IN_PROGRESS,
+    ON_HOLD,
+    IN_REVIEW,
     DONE
 }

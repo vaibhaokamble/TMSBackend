@@ -1,6 +1,7 @@
 package com.organization.taskManagement.DTO.Request;
 
 import com.organization.taskManagement.Enums.TaskStatus;
+import com.organization.taskManagement.Enums.Priority;
 import lombok.*;
 import java.time.LocalDate;
 
@@ -16,5 +17,6 @@ public class TaskRequestDTO {
     private String assignedToId;
     private LocalDate dueDate;
     private TaskStatus status;
+    private Priority priority;
     private LocalDate updatedAt;
 }

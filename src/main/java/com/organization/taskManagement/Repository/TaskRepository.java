@@ -14,4 +14,8 @@ public interface TaskRepository extends JpaRepository<TaskModel, Long> {
     
     @Query("SELECT t FROM TaskModel t WHERE t.assignedTo IS NOT NULL")
     List<TaskModel> findAllAssignedTasks();
+    
+    List<TaskModel> findByProjectId(Long projectId);
+    
+    List<TaskModel> findByAssignedTo_EmployeeId(String employeeId);
 }

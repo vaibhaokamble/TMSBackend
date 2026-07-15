@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 @RestController
 @RequestMapping("/api/teams")
 @RequiredArgsConstructor
@@ -29,5 +31,21 @@ public class TeamController {
     @GetMapping
     public ResponseEntity<List<TeamModel>> getAllTeams() {
         return ResponseEntity.ok(teamService.getAllTeams());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TeamModel> getTeamById(@PathVariable Long id) {
+        return ResponseEntity.ok(teamService.getTeamById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TeamModel> updateTeam(@PathVariable Long id, @RequestBody TeamRequestDTO request) {
+        return ResponseEntity.ok(teamService.updateTeam(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTeam(@PathVariable Long id) {
+        teamService.deleteTeam(id);
+        return ResponseEntity.ok().build();
     }
 }

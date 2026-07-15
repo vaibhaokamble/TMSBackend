@@ -24,6 +24,10 @@ public class UserInfoDetails implements UserDetails {
         this.employee = employee;
     }
 
+    public EmployeeRegisterModel getEmployee() {
+        return this.employee;
+    }
+
     /**
      * INTERNAL FLOW:
      * When Spring Security needs to check permissions, it calls this method.
@@ -32,8 +36,7 @@ public class UserInfoDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if(employee != null && employee.getRole() != null) {
-            // We use the employee ID as the authority for identification
-            return Collections.singleton(new SimpleGrantedAuthority(employee.getEmployeeId()));
+            return Collections.singleton(new SimpleGrantedAuthority(employee.getRole().name()));
         }
         else return Collections.emptyList();
     }
