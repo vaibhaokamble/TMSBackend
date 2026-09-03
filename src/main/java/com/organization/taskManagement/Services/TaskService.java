@@ -26,6 +26,7 @@ public class TaskService {
     private final TeamRepository teamRepo;
     private final ProjectRepository projectRepo;
     private final ActivityLogService activityLogService;
+    private final TaskMapper taskMapper;
 
     public TaskResponseDTO createTask(TaskRequestDTO taskRequest, com.organization.taskManagement.security.UserInfoDetails userDetails) {
         boolean isTeamLead = userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("TEAM_LEAD"));
@@ -53,7 +54,7 @@ public class TaskService {
                     .orElseThrow(() -> new RuntimeException("Project not found with ID: " + taskRequest.getProjectId()));
         }
 
-        TaskModel task = TaskMapper.toEntity(taskRequest, employee, team, project, createdBy);
+        TaskModel task = taskMapper.toEntity(taskRequest, employee, team, project, createdBy);
         TaskModel savedTask = taskRepo.save(task);
 
         if (employee != null) {
@@ -62,36 +63,36 @@ public class TaskService {
             activityLogService.logActivity("Task Created", "Task created: " + savedTask.getTitle(), savedTask);
         }
 
-        return TaskMapper.toResponse(savedTask);
+        return taskMapper.toResponse(savedTask);
     }
 
     public TaskResponseDTO getTaskById(Long id) {
         TaskModel task = taskRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found with ID: " + id));
-        return TaskMapper.toResponse(task);
+        return taskMapper.toResponse(task);
     }
 
     public List<TaskResponseDTO> getAllTasks(com.organization.taskManagement.security.UserInfoDetails userDetails) {
         if (userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("TEAM_LEAD"))) {
             return taskRepo.findAll().stream()
-                    .map(TaskMapper::toResponse)
+                    .map(taskMapper::toResponse)
                     .collect(Collectors.toList());
         }
         
         return taskRepo.findByAssignedTo_EmployeeId(userDetails.getUsername()).stream()
-                .map(TaskMapper::toResponse)
+                .map(taskMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     public List<TaskResponseDTO> getTasksByProjectId(Long projectId) {
         return taskRepo.findByProjectId(projectId).stream()
-                .map(TaskMapper::toResponse)
+                .map(taskMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     public List<TaskResponseDTO> getTasksByAssigneeId(String employeeId) {
         return taskRepo.findByAssignedTo_EmployeeId(employeeId).stream()
-                .map(TaskMapper::toResponse)
+                .map(taskMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
@@ -102,17 +103,14 @@ public class TaskService {
         boolean isEmployee = userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("EMPLOYEE"));
         
         if (isEmployee) {
-            // Employees can only view/update tasks assigned to them
             if (task.getAssignedTo() == null || !task.getAssignedTo().getEmployeeId().equals(userDetails.getUsername())) {
                 throw new RuntimeException("Access Denied: You can only update tasks assigned to you.");
             }
             
-            // Only update status for employees
             if (taskRequest.getStatus() != null) {
                 com.organization.taskManagement.Enums.TaskStatus oldStatus = task.getStatus();
                 com.organization.taskManagement.Enums.TaskStatus newStatus = taskRequest.getStatus();
                 
-                // Validate transition
                 validateStatusTransition(oldStatus, newStatus);
                 
                 task.setStatus(newStatus);
@@ -125,13 +123,12 @@ public class TaskService {
                     logMessage = "Employee completed Task.";
                 }
                 activityLogService.logActivity("Status Changed", logMessage, updatedTask);
-                return TaskMapper.toResponse(updatedTask);
+                return taskMapper.toResponse(updatedTask);
             } else {
                 throw new RuntimeException("Employees can only change task status.");
             }
         }
 
-        // TEAM_LEAD flow
         EmployeeRegisterModel employee = null;
         if (taskRequest.getAssignedToId() != null && !taskRequest.getAssignedToId().isEmpty()) {
             employee = employeeRegRepo.findByEmployeeId(taskRequest.getAssignedToId())
@@ -157,9 +154,8 @@ public class TaskService {
             validateStatusTransition(task.getStatus(), taskRequest.getStatus());
         }
 
-        TaskMapper.updateEntity(task, taskRequest, employee, team, project);
+        taskMapper.updateEntity(task, taskRequest, employee, team, project);
         
-        // If team lead explicitly assigns an unassigned task
         if (wasUnassigned && isNowAssigned) {
             task.setStatus(com.organization.taskManagement.Enums.TaskStatus.ASSIGNED);
         }
@@ -172,7 +168,7 @@ public class TaskService {
             activityLogService.logActivity("Task Updated", "Task updated: " + updatedTask.getTitle(), updatedTask);
         }
 
-        return TaskMapper.toResponse(updatedTask);
+        return taskMapper.toResponse(updatedTask);
     }
     
     private void validateStatusTransition(com.organization.taskManagement.Enums.TaskStatus oldStatus, com.organization.taskManagement.Enums.TaskStatus newStatus) {

@@ -7,57 +7,56 @@ import com.organization.taskManagement.Model.EmployeeRegisterModel;
 import com.organization.taskManagement.Model.ProjectModel;
 import com.organization.taskManagement.Model.TaskModel;
 import com.organization.taskManagement.Model.TeamModel;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-public class TaskMapper {
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+public interface TaskMapper {
 
-    public static TaskModel toEntity(TaskRequestDTO request, EmployeeRegisterModel employee, TeamModel team, ProjectModel project, EmployeeRegisterModel createdBy) {
+    @Mapping(source = "assignedTo.employeeId", target = "assignedToId")
+    @Mapping(source = "assignedTeam.id", target = "assignedTeamId")
+    @Mapping(source = "project.id", target = "projectId")
+    @Mapping(source = "createdBy.employeeId", target = "createdById")
+    TaskResponseDTO toResponse(TaskModel task);
 
-        if (request == null) return null;
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(source = "request.title", target = "title")
+    @Mapping(source = "request.description", target = "description")
+    @Mapping(source = "request.dueDate", target = "dueDate")
+    @Mapping(source = "request.priority", target = "priority")
+    @Mapping(source = "employee", target = "assignedTo")
+    @Mapping(source = "team", target = "assignedTeam")
+    @Mapping(source = "project", target = "project")
+    @Mapping(source = "createdBy", target = "createdBy")
+    TaskModel toEntity(TaskRequestDTO request, EmployeeRegisterModel employee, TeamModel team, ProjectModel project, EmployeeRegisterModel createdBy);
 
+    @AfterMapping
+    default void setStatusForNewTask(@MappingTarget TaskModel task, TaskRequestDTO request, EmployeeRegisterModel employee) {
+        if (request == null) return;
         TaskStatus status = request.getStatus();
         if (status == null || status == TaskStatus.NEW || status == TaskStatus.ASSIGNED) {
-            status = (employee != null) ? TaskStatus.ASSIGNED : TaskStatus.NEW;
+            task.setStatus(employee != null ? TaskStatus.ASSIGNED : TaskStatus.NEW);
+        } else {
+            task.setStatus(status);
         }
-
-        return TaskModel.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .dueDate(request.getDueDate())
-                .assignedTo(employee)
-                .assignedTeam(team)
-                .project(project)
-                .status(status)
-                .priority(request.getPriority())
-                .createdBy(createdBy)
-                .build();
     }
 
-    public static TaskResponseDTO toResponse(TaskModel task) {
-
-        if (task == null) return null;
-
-        return TaskResponseDTO.builder()
-                .id(task.getId())
-                .title(task.getTitle())
-                .description(task.getDescription())
-                .status(task.getStatus())
-                .dueDate(task.getDueDate())
-                .assignedToId(task.getAssignedTo() != null ? task.getAssignedTo().getEmployeeId() : null)
-                .assignedTeamId(task.getAssignedTeam() != null ? task.getAssignedTeam().getId() : null)
-                .projectId(task.getProject() != null ? task.getProject().getId() : null)
-                .priority(task.getPriority())
-                .createdById(task.getCreatedBy() != null ? task.getCreatedBy().getEmployeeId() : null)
-                .build();
-    }
-
-    public static void updateEntity(TaskModel task, TaskRequestDTO request, EmployeeRegisterModel employee, TeamModel team, ProjectModel project) {
-        if (request.getTitle() != null) task.setTitle(request.getTitle());
-        if (request.getDescription() != null) task.setDescription(request.getDescription());
-        if (request.getStatus() != null) task.setStatus(request.getStatus());
-        if (request.getDueDate() != null) task.setDueDate(request.getDueDate());
-        if (request.getPriority() != null) task.setPriority(request.getPriority());
-        if (employee != null) task.setAssignedTo(employee);
-        if (team != null) task.setAssignedTeam(team);
-        if (project != null) task.setProject(project);
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(source = "request.title", target = "title")
+    @Mapping(source = "request.description", target = "description")
+    @Mapping(source = "request.dueDate", target = "dueDate")
+    @Mapping(source = "request.priority", target = "priority")
+    @Mapping(source = "request.status", target = "status")
+    @Mapping(source = "employee", target = "assignedTo")
+    @Mapping(source = "team", target = "assignedTeam")
+    @Mapping(source = "project", target = "project")
+    void updateEntity(@MappingTarget TaskModel task, TaskRequestDTO request, EmployeeRegisterModel employee, TeamModel team, ProjectModel project);
 }

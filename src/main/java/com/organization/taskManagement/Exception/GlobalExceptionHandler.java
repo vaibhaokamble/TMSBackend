@@ -109,7 +109,7 @@ public class GlobalExceptionHandler {
 
         String message = "Invalid request format. ";
         if (ex.getMessage().contains("Enum")) {
-            message += "Please check enum values (role, designation).";
+            message += "Please check your enum values and ensure they are valid.";
         } else if (ex.getMessage().contains("JSON")) {
             message += "Please check your JSON syntax.";
         } else {
